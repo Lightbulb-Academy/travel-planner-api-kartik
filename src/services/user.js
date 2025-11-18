@@ -1,16 +1,25 @@
 import User from "../models/user.js";
-import { hash } from "bcrypt";
 
 const createUser = async (userData) => {
-  userData.password = await hash(userData.password, 10);
+  // userData.password = await hash(userData.password, 10);
+
+  // const user = await User.create(userData);
+  // return {
+  //   _id: user._id,
+  //   name: user.name,
+  //   email: user.email,
+  //   createdAt: user.createdAt,
+  //   updatedAt: user.updatedAt,
+  // };
+
   const user = await User.create(userData);
-  return {
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  };
+  const { password, ...userWithoutPassword } = user.toObject();
+  return userWithoutPassword;
 };
 
-export default createUser;
+const findAllUsers = async () => {
+  const users = await User.find({}, { password: 0 });
+  return users;
+};
+
+export { createUser, findAllUsers };
