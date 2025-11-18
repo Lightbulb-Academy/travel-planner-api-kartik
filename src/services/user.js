@@ -22,4 +22,9 @@ const findAllUsers = async () => {
   return users;
 };
 
-export { createUser, findAllUsers };
+const findUserById = async (id) => {
+  const user = await User.findById(id, { password: 0 });
+  return user;
+};
+
+export { createUser, findAllUsers, findUserById };
