@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "./config/db.js";
 import HANDLERS from "./handlers/index.js";
+import errorMiddleware from "./middlewares/error.js";
 
 const APP_SERVER = express();
 
@@ -15,6 +16,7 @@ APP_SERVER.get("/", (req, res) => {
 
 APP_SERVER.use(express.json());
 APP_SERVER.use("/", HANDLERS);
+APP_SERVER.use(errorMiddleware);
 
 APP_SERVER.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);

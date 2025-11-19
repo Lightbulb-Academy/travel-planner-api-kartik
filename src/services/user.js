@@ -22,8 +22,11 @@ const findAllUsers = async () => {
   return users;
 };
 
-const findUserById = async (id) => {
+const findUserById = async (id, res) => {
   const user = await User.findById(id, { password: 0 });
+  if (!user) {
+    throw new Error("User not found");
+  }
   return user;
 };
 
