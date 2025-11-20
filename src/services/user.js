@@ -1,3 +1,4 @@
+import NotFoundError from "../errors/not-found-error.js";
 import User from "../models/user.js";
 
 const createUser = async (userData) => {
@@ -25,9 +26,40 @@ const findAllUsers = async () => {
 const findUserById = async (id, res) => {
   const user = await User.findById(id, { password: 0 });
   if (!user) {
-    throw new Error("User not found");
+    throw new NotFoundError("User not found");
   }
   return user;
 };
 
-export { createUser, findAllUsers, findUserById };
+const updateUserById = async (id, userData) => {
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      ...(userData.name && { name: userData.name }),
+      ...(userData.email && { email: userData.email }),
+      ...(userData.password && { password: userData.password }),
+    },
+    { new: true, runValidators: true }
+  );
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+  const { password, ...userWithoutPassword } = user.toObject();
+  return userWithoutPassword;
+};
+
+const deleteUserById = async (id) => {
+  const user = await User.findByIdAndDelete(id);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+  return { message: "User deleted successfully" };
+};
+
+export {
+  createUser,
+  findAllUsers,
+  findUserById,
+  updateUserById,
+  deleteUserById,
+};
